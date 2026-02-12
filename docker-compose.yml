@@ -1,0 +1,255 @@
+version: '3.8'
+
+services:
+  smart-dns-nginx:
+    image: nginx:alpine
+    container_name: smart-dns-nginx
+    restart: unless-stopped
+    
+    ports:
+      - "53:53/udp"        # DNS UDP
+      - "53:53/tcp"        # DNS TCP
+      - "80:80"            # HTTP
+      - "443:443"          # HTTPS / DoH
+      - "853:853"          # DNS over TLS
+      - "8080:8080"        # HTTP Proxy
+      - "8443:8443"        # HTTPS Proxy
+      - "8090:8090"        # Admin Interface
+    
+    volumes:
+      # Nginx configuration
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      
+      # SSL certificates
+      - ./ssl:/etc/nginx/ssl:ro
+      
+      # Logs
+      - ./logs:/var/log/nginx
+      
+      # Admin interface
+      - ./web:/var/www/smart-dns-admin:ro
+      
+      # Cache directories
+      - dns_cache:/tmp/dns_cache
+      - proxy_cache:/tmp/proxy_cache
+    
+    environment:
+      - TZ=UTC
+    
+    depends_on:
+      - admin-backend
+      - dns-stats
+      - config-manager
+    
+    networks:
+      - smart-dns-net
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  admin-backend:
+    build:
+      context: ./admin-backend
+      dockerfile: Dockerfile
+    container_name: smart-dns-admin-backend
+    restart: unless-stopped
+    
+    ports:
+      - "9090:9090"
+    
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs:ro
+      - ./nginx/conf.d:/app/nginx-config
+    
+    environment:
+      - NODE_ENV=production
+      - API_PORT=9090
+      - CONFIG_PATH=/app/config
+      - NGINX_CONFIG_PATH=/app/nginx-config
+      
+    networks:
+      - smart-dns-net
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  dns-stats:
+    build:
+      context: ./dns-stats
+      dockerfile: Dockerfile
+    container_name: smart-dns-stats
+    restart: unless-stopped
+    
+    ports:
+      - "9091:9091"
+      
+    volumes:
+      - ./logs:/app/logs:ro
+      
+    environment:
+      - STATS_PORT=9091
+      - LOG_PATH=/app/logs
+      
+    networks:
+      - smart-dns-net
+
+  config-manager:
+    build:
+      context: ./config-manager
+      dockerfile: Dockerfile
+    container_name: smart-dns-config-manager
+    restart: unless-stopped
+    
+    ports:
+      - "9092:9092"
+      
+    volumes:
+      - ./config:/app/config
+      - ./nginx/conf.d:/app/nginx-config
+      
+    environment:
+      - CONFIG_PORT=9092
+      - CONFIG_PATH=/app/config
+      - NGINX_CONFIG_PATH=/app/nginx-config
+      
+    networks:
+      - smart-dns-net
+
+  websocket-server:
+    build:
+      context: ./websocket-server
+      dockerfile: Dockerfile
+    container_name: smart-dns-websocket
+    restart: unless-stopped
+    
+    ports:
+      - "9093:9093"
+      
+    volumes:
+      - ./logs:/app/logs:ro
+      
+    environment:
+      - WS_PORT=9093
+      - LOG_PATH=/app/logs
+      
+    networks:
+      - smart-dns-net
+
+  ssl-manager:
+    build:
+      context: ./ssl-manager
+      dockerfile: Dockerfile
+    container_name: smart-dns-ssl-manager
+    restart: unless-stopped
+    
+    ports:
+      - "9094:9094"
+      
+    volumes:
+      - ./ssl:/app/ssl
+      - ./config:/app/config:ro
+      
+    environment:
+      - SSL_PORT=9094
+      - SSL_PATH=/app/ssl
+      - CONFIG_PATH=/app/config
+      
+    networks:
+      - smart-dns-net
+
+  # Optional: Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: smart-dns-redis
+    restart: unless-stopped
+    
+    volumes:
+      - redis_data:/data
+      
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    
+    networks:
+      - smart-dns-net
+      
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Optional: Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: smart-dns-prometheus
+    restart: unless-stopped
+    
+    ports:
+      - "9191:9090"
+      
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+      
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    
+    networks:
+      - smart-dns-net
+    
+    profiles:
+      - monitoring
+
+  # Optional: Grafana for dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: smart-dns-grafana
+    restart: unless-stopped
+    
+    ports:
+      - "3000:3000"
+      
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+      
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+      
+    networks:
+      - smart-dns-net
+    
+    profiles:
+      - monitoring
+
+networks:
+  smart-dns-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  dns_cache:
+    driver: local
+  proxy_cache:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local

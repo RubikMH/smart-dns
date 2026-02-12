@@ -1,0 +1,13 @@
+{
+  "name": "smart-dns-config-manager",
+  "version": "1.0.0",
+  "description": "Configuration manager for Smart DNS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "license": "MIT"
+}

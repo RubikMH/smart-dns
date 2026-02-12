@@ -1,0 +1,15 @@
+# Placeholder for SSL certificates
+# This directory will contain:
+# - server.crt (SSL certificate)
+# - server.key (Private key)
+
+Generate certificates using:
+```bash
+openssl req -x509 -newkey rsa:2048 -nodes \
+    -keyout server.key \
+    -out server.crt \
+    -days 365 \
+    -subj "/C=US/ST=State/L=City/O=SmartDNS/CN=localhost"
+```
+
+For production, use Let's Encrypt or a trusted CA.

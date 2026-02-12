@@ -1,0 +1,13 @@
+{
+  "name": "smart-dns-stats",
+  "version": "1.0.0",
+  "description": "DNS statistics service for Smart DNS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "license": "MIT"
+}

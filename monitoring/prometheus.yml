@@ -1,0 +1,30 @@
+# Example Prometheus configuration for Smart DNS monitoring
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'smart-dns'
+
+scrape_configs:
+  # Nginx metrics (requires nginx-prometheus-exporter)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['smart-dns-nginx:9113']
+    
+  # Node exporter for system metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+  
+  # Application metrics
+  - job_name: 'smart-dns-admin'
+    static_configs:
+      - targets: ['admin-backend:9090']
+    metrics_path: '/api/metrics'
+  
+  # DNS stats
+  - job_name: 'dns-stats'
+    static_configs:
+      - targets: ['dns-stats:9091']
+    metrics_path: '/metrics'
