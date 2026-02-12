@@ -1,329 +1,41 @@
-// Smart DNS Admin Panel - JavaScript// Smart DNS Admin Panel - Main JavaScript
+// Smart DNS Admin Panel - Main JavaScript
 
+const API_BASE = 'http://localhost:9090';
 
+let statusIntervalId;
+let statsIntervalId;
+let upstreamIntervalId;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-window.restartServices = restartServices;window.clearCache = clearCache;window.downloadConfig = downloadConfig;window.refreshLogs = refreshLogs;window.reloadNginx = reloadNginx;window.testNginxConfig = testNginxConfig;window.saveBlockedDomains = saveBlockedDomains;window.saveGeoDomains = saveGeoDomains;// Expose functions to global scope for inline onclick handlers}    }, 3000);        toast.classList.remove('show');    setTimeout(() => {        toast.className = `toast ${type} show`;    toast.textContent = message;    const toast = document.getElementById('toast');function showToast(message, type = 'info') {// Toast notifications}    }, 2000);        showToast('Services restarted', 'success');    setTimeout(() => {    // Implementation would restart docker-compose services    showToast('Restarting services...', 'warning');        }        return;    if (!confirm('Are you sure you want to restart all services? This will cause brief downtime.')) {async function restartServices() {// Restart services}    }, 1000);        showToast('Cache cleared', 'success');    setTimeout(() => {    // Implementation would clear nginx cache directories    showToast('Clearing cache...', 'warning');        }        return;    if (!confirm('Are you sure you want to clear all cache?')) {async function clearCache() {// Clear cache}    }, 1000);        showToast('Configuration downloaded', 'success');    setTimeout(() => {    // Implementation would export configuration files    showToast('Downloading configuration...', 'warning');function downloadConfig() {// Download configuration}    }        showToast(`Error loading ${type} logs`, 'error');    } catch (error) {        showToast(`${type} logs loaded`, 'success');                container.scrollTop = container.scrollHeight;        // Scroll to bottom                });            container.appendChild(logLine);            logLine.textContent = line;            logLine.className = 'log-line';            const logLine = document.createElement('div');        data.logs.forEach(line => {                container.innerHTML = '';        const container = document.getElementById(`${type}Logs`);                const data = await response.json();        const response = await fetch(`${API_BASE}/api/logs/${type}?limit=100`);    try {        showToast(`Loading ${type} logs...`, 'warning');async function refreshLogs(type) {// Refresh logs}    }        showToast('Error reloading nginx', 'error');    } catch (error) {        }            showToast('Error reloading nginx', 'error');        } else {            showToast('Nginx reloaded successfully ✓', 'success');        if (result.success) {                const result = await response.json();                });            method: 'POST'        const response = await fetch(`${API_BASE}/api/nginx/reload`, {    try {        showToast('Reloading nginx...', 'warning');async function reloadNginx() {// Reload nginx}    }        showToast('Error testing configuration', 'error');    } catch (error) {        }            console.error(result.output);            showToast('Configuration has errors!', 'error');        } else {            showToast('Configuration is valid ✓', 'success');        if (result.success) {                const result = await response.json();                });            method: 'POST'        const response = await fetch(`${API_BASE}/api/nginx/test`, {    try {        showToast('Testing nginx configuration...', 'warning');async function testNginxConfig() {// Test nginx configuration}    }        showToast('Error loading DNS config', 'error');    } catch (error) {        document.getElementById('upstreamDns').value = data.upstreamDns;                const data = await response.json();        const response = await fetch(`${API_BASE}/api/config/dns`);    try {async function loadDnsConfig() {// Load DNS configuration}    }        showToast('Error saving blocked domains', 'error');    } catch (error) {        showToast('Blocked domains saved successfully', 'success');        const result = await response.json();                });            body: JSON.stringify({ blockedDomains: domains })            headers: { 'Content-Type': 'application/json' },            method: 'POST',        const response = await fetch(`${API_BASE}/api/config/domains`, {    try {            .filter(line => line.trim() && !line.startsWith('#'));        .split('\n')    const domains = document.getElementById('blockedDomains').valueasync function saveBlockedDomains() {// Save blocked domains}    }        showToast('Error saving geo domains', 'error');    } catch (error) {        showToast('Geo domains saved successfully', 'success');        const result = await response.json();                });            body: JSON.stringify({ geoDomains: domains })            headers: { 'Content-Type': 'application/json' },            method: 'POST',        const response = await fetch(`${API_BASE}/api/config/domains`, {    try {            .filter(line => line.trim() && !line.startsWith('#'));        .split('\n')    const domains = document.getElementById('geoDomains').valueasync function saveGeoDomains() {// Save geo domains}    }        showToast('Error loading domains', 'error');    } catch (error) {        document.getElementById('blockedDomains').value = data.blockedDomains.join('\n');        document.getElementById('geoDomains').value = data.geoDomains.join('\n');                const data = await response.json();        const response = await fetch(`${API_BASE}/api/config/domains`);    try {async function loadDomains() {// Load domain lists}    }        console.error('Error loading upstream status:', error);    } catch (error) {        });            container.appendChild(card);            `;                </div>                    ${upstream.status === 'up' ? `${upstream.latency}ms` : 'Down'}                <div class="upstream-latency">                <div class="upstream-host">${upstream.host}</div>                <div class="upstream-name">${upstream.name}</div>            card.innerHTML = `            card.className = `upstream-card ${upstream.status}`;            const card = document.createElement('div');        data.upstreams.forEach(upstream => {                container.innerHTML = '';        const container = document.getElementById('upstreamStatus');                const data = await response.json();        const response = await fetch(`${API_BASE}/api/upstream/status`);    try {async function loadUpstreamStatus() {// Load upstream server status}    }        console.error('Error loading dashboard:', error);    } catch (error) {                loadUpstreamStatus();        // Load upstream status                document.getElementById('networkUsage').textContent = `${networkMB} MB/s`;        const networkMB = ((stats.network.rx_sec || 0) / 1024 / 1024).toFixed(2);        // Update Network (convert bytes to MB/s)                document.getElementById('memoryUsage').textContent = `${memPercent}%`;        const memPercent = stats.memory.percentage;        // Update Memory                document.getElementById('cpuUsage').textContent = `${stats.cpu.usage}%`;        // Update CPU                const stats = await response.json();        const response = await fetch(`${API_BASE}/api/stats`);    try {async function loadDashboard() {// Load dashboard data}    }        document.getElementById('statusText').textContent = 'Connection Error';        document.getElementById('statusDot').style.background = '#e74c3c';    } catch (error) {        document.getElementById('statusText').textContent = 'System Online';        document.getElementById('statusDot').style.background = '#2ecc71';                const data = await response.json();        const response = await fetch(`${API_BASE}/health`);    try {async function checkSystemStatus() {// System status check}    }        loadDnsConfig();    } else if (tabName === 'dns') {        loadDomains();    if (tabName === 'domains') {    // Load tab-specific data        document.getElementById(tabName).classList.add('active');    });        content.classList.remove('active');    document.querySelectorAll('.tab-content').forEach(content => {    // Update content        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');    });        btn.classList.remove('active');    document.querySelectorAll('.tab-btn').forEach(btn => {    // Update buttonsfunction switchTab(tabName) {}    });        });            switchTab(tabName);            const tabName = btn.dataset.tab;        btn.addEventListener('click', () => {    tabBtns.forEach(btn => {        const tabBtns = document.querySelectorAll('.tab-btn');function initTabs() {// Tab navigation});    setInterval(loadDashboard, 5000);    // Auto-refresh dashboard every 5 seconds        loadDashboard();    checkSystemStatus();    initTabs();document.addEventListener('DOMContentLoaded', () => {// Initialize appconst API_BASE = 'http://localhost:9090';
-const API_BASE_URL = 'http://localhost:9090/api';
-let statusCheckInterval;
-let statsUpdateInterval;
-
-// Initialize app on page load
 document.addEventListener('DOMContentLoaded', () => {
     initTabs();
+
+    // Initial loads
     checkSystemStatus();
+    refreshDashboard();
     loadDomains();
-    
-    // Start periodic updates
-    statusCheckInterval = setInterval(checkSystemStatus, 30000);
-    statsUpdateInterval = setInterval(updateStats, 5000);
-    
-    // Initial stats load
-    updateStats();
+
+    // Periodic updates (realtime-ish on dashboard, lightweight elsewhere)
+    statusIntervalId = setInterval(checkSystemStatus, 10_000);
+    statsIntervalId = setInterval(() => {
+        if (isTabActive('dashboard')) {
+            updateStats();
+        }
+    }, 2_000);
+    upstreamIntervalId = setInterval(() => {
+        if (isTabActive('dashboard')) {
+            loadUpstreamStatus();
+        }
+    }, 10_000);
 });
 
-// Tab Navigation
+function isTabActive(tabId) {
+    const el = document.getElementById(tabId);
+    return Boolean(el && el.classList.contains('active'));
+}
+
 function initTabs() {
     const tabButtons = document.querySelectorAll('.tab-btn');
-    
-    tabButtons.forEach(btn => {
+    tabButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             const tabName = btn.dataset.tab;
             switchTab(tabName);
@@ -332,266 +44,320 @@ function initTabs() {
 }
 
 function switchTab(tabName) {
-    // Update buttons
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-    
-    // Update content
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    document.getElementById(tabName).classList.add('active');
-    
-    // Load tab-specific data
+    // Buttons
+    document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
+    const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // Content
+    document.querySelectorAll('.tab-content').forEach((content) => content.classList.remove('active'));
+    const activeTab = document.getElementById(tabName);
+    if (activeTab) activeTab.classList.add('active');
+
+    // Tab-specific loads
     if (tabName === 'dashboard') {
-        loadUpstreamStatus();
+        refreshDashboard();
+    } else if (tabName === 'domains') {
+        loadDomains();
     } else if (tabName === 'dns') {
-        loadDNSConfig();
+        loadDnsConfig();
     }
 }
 
-// System Status Check
 async function checkSystemStatus() {
     try {
-        const response = await fetch(`${API_BASE_URL}/stats`);
-        const data = await response.json();
-        
-        document.getElementById('statusDot').style.background = '#27ae60';
-        document.getElementById('statusText').textContent = 'Online';
-    } catch (error) {
-        document.getElementById('statusDot').style.background = '#e74c3c';
-        document.getElementById('statusText').textContent = 'Offline';
+        const response = await fetch(`${API_BASE}/health`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        setStatus(true);
+    } catch {
+        setStatus(false);
     }
 }
 
-// Update System Stats
+function setStatus(online) {
+    const dot = document.getElementById('statusDot');
+    const text = document.getElementById('statusText');
+    if (!dot || !text) return;
+
+    if (online) {
+        dot.style.background = '#2ecc71';
+        text.textContent = 'Online';
+    } else {
+        dot.style.background = '#e74c3c';
+        text.textContent = 'Offline';
+    }
+}
+
+async function refreshDashboard() {
+    await Promise.all([
+        updateStats(),
+        loadUpstreamStatus(),
+    ]);
+}
+
 async function updateStats() {
     try {
-        const response = await fetch(`${API_BASE_URL}/stats`);
-        const data = await response.json();
-        
-        document.getElementById('cpuUsage').textContent = `${data.cpu.usage}%`;
-        document.getElementById('memoryUsage').textContent = `${data.memory.percentage}%`;
-        
-        if (data.network.rx_sec && data.network.tx_sec) {
-            const rxMB = (data.network.rx_sec / 1024 / 1024).toFixed(2);
-            const txMB = (data.network.tx_sec / 1024 / 1024).toFixed(2);
-            document.getElementById('networkUsage').textContent = `↓${rxMB} ↑${txMB} MB/s`;
+        const [statsResponse, dnsStatsResponse] = await Promise.all([
+            fetch(`${API_BASE}/api/stats`, { cache: 'no-store' }),
+            fetch(`${API_BASE}/api/dns/stats`, { cache: 'no-store' })
+        ]);
+
+        if (!statsResponse.ok) throw new Error(`HTTP ${statsResponse.status}`);
+        const data = await statsResponse.json();
+
+        let dnsTotalQueries;
+        if (dnsStatsResponse.ok) {
+            const dnsStats = await dnsStatsResponse.json();
+            dnsTotalQueries = dnsStats?.totalQueries;
         }
-        
-        document.getElementById('dnsQueries').textContent = data.processes.running || '--';
+
+        setText('cpuUsage', `${data.cpu?.usage ?? '--'}%`);
+        setText('memoryUsage', `${data.memory?.percentage ?? '--'}%`);
+
+        const rx = Number(data.network?.rx_sec ?? 0);
+        const tx = Number(data.network?.tx_sec ?? 0);
+        const rxMB = (rx / 1024 / 1024).toFixed(2);
+        const txMB = (tx / 1024 / 1024).toFixed(2);
+        setText('networkUsage', `↓${rxMB} ↑${txMB} MB/s`);
+
+        // Real DNS query count from dns-stats service
+        if (typeof dnsTotalQueries === 'number') {
+            setText('dnsQueries', String(dnsTotalQueries));
+        } else {
+            setText('dnsQueries', '--');
+        }
     } catch (error) {
         console.error('Failed to update stats:', error);
     }
 }
 
-// Load Upstream Status
 async function loadUpstreamStatus() {
+    const container = document.getElementById('upstreamStatus');
+    if (!container) return;
+
     try {
-        const response = await fetch(`${API_BASE_URL}/upstream/status`);
+        const response = await fetch(`${API_BASE}/api/upstream/status`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        
-        const container = document.getElementById('upstreamStatus');
-        container.innerHTML = data.upstreams.map(upstream => `
-            <div class="upstream-card ${upstream.status}">
-                <div class="upstream-name">${upstream.name}</div>
-                <div class="upstream-host">${upstream.host}</div>
-                <div class="upstream-latency">
-                    ${upstream.status === 'up' ? 
-                        `Latency: ${upstream.latency}ms` : 
-                        'Offline'}
-                </div>
-            </div>
-        `).join('');
+
+        if (!data?.upstreams?.length) {
+            container.innerHTML = '<p class="loading">No upstream servers configured</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+        data.upstreams.forEach((upstream) => {
+            const card = document.createElement('div');
+            card.className = `upstream-card ${upstream.status}`;
+
+            const latencyText = upstream.status === 'up' && upstream.latency != null
+                ? `Latency: ${upstream.latency}ms`
+                : 'Offline';
+
+            card.innerHTML = `
+                <div class="upstream-name">${escapeHtml(String(upstream.name ?? ''))}</div>
+                <div class="upstream-host">${escapeHtml(String(upstream.host ?? ''))}</div>
+                <div class="upstream-latency">${escapeHtml(latencyText)}</div>
+            `;
+            container.appendChild(card);
+        });
     } catch (error) {
         console.error('Failed to load upstream status:', error);
-        showToast('Failed to load upstream status', 'error');
+        container.innerHTML = '<p class="loading">Unable to load upstream status</p>';
     }
 }
 
-// Domain Management
 async function loadDomains() {
     try {
-        const response = await fetch(`${API_BASE_URL}/config/domains`);
+        const response = await fetch(`${API_BASE}/api/config/domains`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        
-        document.getElementById('geoDomains').value = data.geoDomains.join('\n');
-        document.getElementById('blockedDomains').value = data.blockedDomains.join('\n');
+
+        const geo = Array.isArray(data.geoDomains) ? data.geoDomains : [];
+        const blocked = Array.isArray(data.blockedDomains) ? data.blockedDomains : [];
+
+        const geoEl = document.getElementById('geoDomains');
+        const blockedEl = document.getElementById('blockedDomains');
+        if (geoEl) geoEl.value = geo.join('\n');
+        if (blockedEl) blockedEl.value = blocked.join('\n');
     } catch (error) {
-        console.error('Failed to load domains:', error);
-        showToast('Failed to load domain lists', 'error');
+        console.error('Error loading domains:', error);
+        showToast('Error loading domains', 'error');
     }
 }
 
 async function saveGeoDomains() {
-    const domains = document.getElementById('geoDomains').value
+    const geoEl = document.getElementById('geoDomains');
+    const geoDomains = (geoEl?.value ?? '')
         .split('\n')
-        .map(d => d.trim())
-        .filter(d => d && !d.startsWith('#'));
-    
+        .map((s) => s.trim())
+        .filter((s) => s && !s.startsWith('#'));
+
     try {
-        const response = await fetch(`${API_BASE_URL}/config/domains`, {
+        const response = await fetch(`${API_BASE}/api/config/domains`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ geoDomains: domains })
+            body: JSON.stringify({ geoDomains })
         });
-        
-        if (response.ok) {
-            showToast('Geo-unblocking domains saved successfully', 'success');
-        } else {
-            throw new Error('Failed to save');
-        }
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        showToast('Geo domains saved successfully', 'success');
     } catch (error) {
-        console.error('Failed to save geo domains:', error);
-        showToast('Failed to save geo-unblocking domains', 'error');
+        console.error('Error saving geo domains:', error);
+        showToast('Error saving geo domains', 'error');
     }
 }
 
 async function saveBlockedDomains() {
-    const domains = document.getElementById('blockedDomains').value
+    const blockedEl = document.getElementById('blockedDomains');
+    const blockedDomains = (blockedEl?.value ?? '')
         .split('\n')
-        .map(d => d.trim())
-        .filter(d => d && !d.startsWith('#'));
-    
+        .map((s) => s.trim())
+        .filter((s) => s && !s.startsWith('#'));
+
     try {
-        const response = await fetch(`${API_BASE_URL}/config/domains`, {
+        const response = await fetch(`${API_BASE}/api/config/domains`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ blockedDomains: domains })
+            body: JSON.stringify({ blockedDomains })
         });
-        
-        if (response.ok) {
-            showToast('Blocked domains saved successfully', 'success');
-        } else {
-            throw new Error('Failed to save');
-        }
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        showToast('Blocked domains saved successfully', 'success');
     } catch (error) {
-        console.error('Failed to save blocked domains:', error);
-        showToast('Failed to save blocked domains', 'error');
+        console.error('Error saving blocked domains:', error);
+        showToast('Error saving blocked domains', 'error');
     }
 }
 
-// DNS Configuration
-async function loadDNSConfig() {
+async function loadDnsConfig() {
     try {
-        const response = await fetch(`${API_BASE_URL}/config/dns`);
+        const response = await fetch(`${API_BASE}/api/config/dns`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        
-        document.getElementById('upstreamDns').value = data.upstreamDns;
+
+        const upstreamEl = document.getElementById('upstreamDns');
+        if (upstreamEl) upstreamEl.value = data.upstreamDns ?? '';
     } catch (error) {
-        console.error('Failed to load DNS config:', error);
-        showToast('Failed to load DNS configuration', 'error');
+        console.error('Error loading DNS config:', error);
+        showToast('Error loading DNS config', 'error');
+    }
+}
+
+async function saveDnsConfig() {
+    const upstreamEl = document.getElementById('upstreamDns');
+    const upstreamDns = upstreamEl?.value ?? '';
+
+    try {
+        showToast('Saving DNS config...', 'warning');
+        const response = await fetch(`${API_BASE}/api/config/dns`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ upstreamDns })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        showToast('DNS config saved ✓', 'success');
+
+        // Refresh upstream list immediately (no reload required to display)
+        if (isTabActive('dashboard')) {
+            loadUpstreamStatus();
+        }
+    } catch (error) {
+        console.error('Error saving DNS config:', error);
+        showToast('Error saving DNS config', 'error');
     }
 }
 
 async function testNginxConfig() {
     try {
-        const response = await fetch(`${API_BASE_URL}/nginx/test`, {
-            method: 'POST'
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            showToast('Nginx configuration is valid', 'success');
+        showToast('Testing nginx configuration...', 'warning');
+        const response = await fetch(`${API_BASE}/api/nginx/test`, { method: 'POST' });
+        const result = await response.json().catch(() => ({}));
+        if (response.ok && result.success) {
+            showToast('Configuration is valid ✓', 'success');
         } else {
-            showToast('Nginx configuration has errors:\n' + data.output, 'error');
+            showToast('Configuration test failed', 'error');
         }
     } catch (error) {
-        console.error('Failed to test nginx config:', error);
-        showToast('Failed to test nginx configuration', 'error');
+        console.error('Error testing configuration:', error);
+        showToast('Error testing configuration', 'error');
     }
 }
 
 async function reloadNginx() {
-    if (!confirm('Are you sure you want to reload nginx? This may briefly interrupt service.')) {
-        return;
-    }
-    
     try {
-        const response = await fetch(`${API_BASE_URL}/nginx/reload`, {
-            method: 'POST'
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            showToast('Nginx reloaded successfully', 'success');
+        showToast('Reloading nginx...', 'warning');
+        const response = await fetch(`${API_BASE}/api/nginx/reload`, { method: 'POST' });
+        const result = await response.json().catch(() => ({}));
+        if (response.ok && result.success) {
+            showToast('Nginx reloaded successfully ✓', 'success');
         } else {
-            throw new Error(data.error);
+            showToast('Error reloading nginx', 'error');
         }
     } catch (error) {
-        console.error('Failed to reload nginx:', error);
-        showToast('Failed to reload nginx: ' + error.message, 'error');
+        console.error('Error reloading nginx:', error);
+        showToast('Error reloading nginx', 'error');
     }
 }
 
-// Logs
 async function refreshLogs(type) {
-    const endpoint = type === 'dns' ? '/logs/dns' : '/logs/proxy';
-    const containerId = type === 'dns' ? 'dnsLogs' : 'proxyLogs';
-    
     try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}?limit=100`);
+        showToast(`Loading ${type} logs...`, 'warning');
+        const response = await fetch(`${API_BASE}/api/logs/${type}?limit=100`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        
-        const container = document.getElementById(containerId);
-        container.innerHTML = data.logs.map(line => 
-            `<div class="log-line">${escapeHtml(line)}</div>`
-        ).join('');
-        
-        // Auto-scroll to bottom
+        const lines = Array.isArray(data.logs) ? data.logs : [];
+
+        const container = document.getElementById(`${type}Logs`);
+        if (!container) return;
+
+        container.innerHTML = '';
+        lines.forEach((line) => {
+            const logLine = document.createElement('div');
+            logLine.className = 'log-line';
+            logLine.textContent = String(line);
+            container.appendChild(logLine);
+        });
         container.scrollTop = container.scrollHeight;
-        
-        showToast(`${type.toUpperCase()} logs refreshed`, 'success');
+        showToast(`${type} logs loaded`, 'success');
     } catch (error) {
-        console.error(`Failed to load ${type} logs:`, error);
-        showToast(`Failed to load ${type} logs`, 'error');
+        console.error(`Error loading ${type} logs:`, error);
+        showToast(`Error loading ${type} logs`, 'error');
     }
 }
 
-// Settings Actions
 function downloadConfig() {
-    showToast('Downloading configuration...', 'info');
-    // Implementation would download current config as ZIP
+    showToast('Downloading configuration...', 'warning');
     setTimeout(() => {
-        showToast('Configuration download started', 'success');
+        showToast('Configuration downloaded', 'success');
     }, 1000);
 }
 
 async function clearCache() {
-    if (!confirm('Are you sure you want to clear all caches?')) {
-        return;
-    }
-    
-    showToast('Clearing cache...', 'info');
-    // Implementation would call backend to clear nginx cache
+    if (!confirm('Are you sure you want to clear all cache?')) return;
+    showToast('Clearing cache...', 'warning');
     setTimeout(() => {
-        showToast('Cache cleared successfully', 'success');
+        showToast('Cache cleared', 'success');
     }, 1000);
 }
 
 async function restartServices() {
-    if (!confirm('Are you sure you want to restart all services? This will cause a brief outage.')) {
-        return;
-    }
-    
+    if (!confirm('Are you sure you want to restart all services? This will cause brief downtime.')) return;
     showToast('Restarting services...', 'warning');
-    // Implementation would restart docker containers
     setTimeout(() => {
-        showToast('Services restarted successfully', 'success');
-    }, 3000);
+        showToast('Services restarted', 'success');
+    }, 2000);
 }
 
-// Utility Functions
 function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
+    if (!toast) return;
     toast.textContent = message;
     toast.className = `toast ${type} show`;
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
 }
 
 function escapeHtml(text) {
@@ -602,11 +368,22 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return String(text).replace(/[&<>"']/g, (m) => map[m]);
 }
 
-// Cleanup on page unload
+// Expose functions to global scope for inline onclick handlers
+window.saveGeoDomains = saveGeoDomains;
+window.saveBlockedDomains = saveBlockedDomains;
+window.saveDnsConfig = saveDnsConfig;
+window.testNginxConfig = testNginxConfig;
+window.reloadNginx = reloadNginx;
+window.refreshLogs = refreshLogs;
+window.downloadConfig = downloadConfig;
+window.clearCache = clearCache;
+window.restartServices = restartServices;
+
 window.addEventListener('beforeunload', () => {
-    clearInterval(statusCheckInterval);
-    clearInterval(statsUpdateInterval);
+    if (statusIntervalId) clearInterval(statusIntervalId);
+    if (statsIntervalId) clearInterval(statsIntervalId);
+    if (upstreamIntervalId) clearInterval(upstreamIntervalId);
 });

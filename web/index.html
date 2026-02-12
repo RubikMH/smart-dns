@@ -131,6 +131,9 @@
                     <div class="code-editor">
                         <textarea id="upstreamDns" class="config-textarea" spellcheck="false"></textarea>
                     </div>
+                    <button class="btn btn-primary" onclick="saveDnsConfig()">
+                        <i class="fas fa-save"></i> Save
+                    </button>
                     <button class="btn btn-warning" onclick="testNginxConfig()">
                         <i class="fas fa-vial"></i> Test Configuration
                     </button>
@@ -232,6 +235,7 @@
     <div id="toast" class="toast"></div>
 
     <!-- Scripts -->
+    <script src="js/activity.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -97,6 +97,7 @@ Thumbs.db
 
 # Backups
 *.bak
+*.old
 backup/
 
 # Temporary files

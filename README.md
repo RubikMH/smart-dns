@@ -36,8 +36,11 @@ git clone https://github.com/RubikMH/smart-dns.git
 cd smart-dns
 docker-compose up -d
 
+# If you get "port 53 already in use" error (common on macOS):
+./scripts/fix-port-conflict.sh
+
 # Configure your devices to use:
-# DNS: localhost:53 (or your server IP)
+# DNS: localhost:53 (or localhost:5353 if using alternative ports)
 # HTTP Proxy: localhost:8080
 ```
 

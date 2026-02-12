@@ -38,7 +38,7 @@ ssl:
 # Start services
 start:
 	@echo "Starting Smart DNS services..."
-	@docker-compose up -d
+	@docker-compose up -d || (echo "\n⚠️  If port 53 is in use, run: ./scripts/fix-port-conflict.sh" && exit 1)
 	@echo "✅ Services started"
 	@make status
 

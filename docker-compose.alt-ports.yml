@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Alternative port configuration for macOS and systems where port 53 is already in use
 # This configuration uses port 5353 for DNS instead of port 53
 
@@ -10,13 +8,13 @@ services:
     restart: unless-stopped
     
     ports:
-      - "5353:53/udp"      # DNS UDP (alternative port)
-      - "5353:53/tcp"      # DNS TCP (alternative port)
-      - "80:80"            # HTTP
-      - "443:443"          # HTTPS / DoH
+      - "5454:53/udp"      # DNS UDP (alternative port - avoiding 5353)
+      - "5454:53/tcp"      # DNS TCP (alternative port - avoiding 5353)
+      - "8000:80"          # HTTP (alternative port)
+      - "8443:443"         # HTTPS / DoH (alternative port)
       - "8853:853"         # DNS over TLS (alternative port)
       - "8080:8080"        # HTTP Proxy
-      - "8443:8443"        # HTTPS Proxy
+      - "8444:8443"        # HTTPS Proxy (avoiding conflict)
       - "8090:8090"        # Admin Interface
     
     volumes:

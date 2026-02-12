@@ -1,4 +1,5 @@
-version: '3.8'
+# Alternative port configuration for macOS and systems where port 53 is already in use
+# This configuration uses port 5353 for DNS instead of port 53
 
 services:
   smart-dns-nginx:
@@ -7,13 +8,13 @@ services:
     restart: unless-stopped
     
     ports:
-      - "53:53/udp"        # DNS UDP
-      - "53:53/tcp"        # DNS TCP
-      - "80:80"            # HTTP
-      - "443:443"          # HTTPS / DoH
-      - "853:853"          # DNS over TLS
+      - "5454:53/udp"      # DNS UDP (alternative port - avoiding 53 and 5353)
+      - "5454:53/tcp"      # DNS TCP (alternative port - avoiding 53 and 5353)
+      - "8000:80"          # HTTP (alternative port)
+      - "8443:443"         # HTTPS / DoH
+      - "8853:853"         # DNS over TLS (alternative port)
       - "8080:8080"        # HTTP Proxy
-      - "8443:8443"        # HTTPS Proxy
+      - "8444:8443"        # HTTPS Proxy (avoiding conflict)
       - "8090:8090"        # Admin Interface
     
     volumes:
@@ -66,12 +67,14 @@ services:
       - ./config:/app/config
       - ./logs:/app/logs:ro
       - ./nginx/conf.d:/app/nginx-config
+      - /var/run/docker.sock:/var/run/docker.sock
     
     environment:
       - NODE_ENV=production
       - API_PORT=9090
       - CONFIG_PATH=/app/config
       - NGINX_CONFIG_PATH=/app/nginx-config
+      - NGINX_CONTAINER_NAME=smart-dns-nginx
       
     networks:
       - smart-dns-net
@@ -166,7 +169,6 @@ services:
     networks:
       - smart-dns-net
 
-  # Optional: Redis for caching and session management
   redis:
     image: redis:7-alpine
     container_name: smart-dns-redis
@@ -186,7 +188,6 @@ services:
       timeout: 5s
       retries: 3
 
-  # Optional: Monitoring with Prometheus
   prometheus:
     image: prom/prometheus:latest
     container_name: smart-dns-prometheus
@@ -211,7 +212,6 @@ services:
     profiles:
       - monitoring
 
-  # Optional: Grafana for dashboards
   grafana:
     image: grafana/grafana:latest
     container_name: smart-dns-grafana

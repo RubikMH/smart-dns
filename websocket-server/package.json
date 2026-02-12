@@ -1,0 +1,15 @@
+{
+  "name": "smart-dns-websocket-server",
+  "version": "1.0.0",
+  "description": "WebSocket server for Smart DNS real-time updates",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.16.0",
+    "tail": "^2.2.6"
+  },
+  "author": "",
+  "license": "MIT"
+}
